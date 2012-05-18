@@ -1,0 +1,73 @@
+Jukebox is a small library to manage one or more sounds in your Actionscript 3 application. It has support for external mp3 files, embedded files and also loading mp3 files from the users computer (via file dialog, requires Flash Player 11).
+
+The API is super easy to use (more details in API):
+
+1. Get a Jukebox reference
+
+import com.flamesproductions.audio.Jukebox;
+ 
+var jukebox:Jukebox = Jukebox.getInstance();
+2. Call one of the load functions and give this sound a unique ID
+
+// get record from server or local disk
+public function getRecord(url:String, id:String, selectRecord:Boolean = false, autoplay:Boolean = false):void
+ 
+// load record from embedded song, pass class name
+public function createRecord(classid:String, id:String, selectRecord:Boolean = false, autoplay:Boolean = false):void
+ 
+// use existing sound object
+public function useRecord(snd:Sound, id:String, selectRecord:Boolean = false, autoplay:Boolean = false):void
+ 
+// show upload dialog window so the user can upload track into the player
+public function insertDisc(id:String):void
+3. Call the play, stop, pause,… functions and pass in the ID of the track you want to play
+
+// play record
+public function playRecord(id:String="", silenceOthers:Boolean=false, time:int = 0, loops:int=0, volume:Number = 1, pan:Number=0):Boolean
+ 
+// toggle pause/resume
+public function togglePause(id:String=""):Boolean
+ 
+// stop record
+public function stopRecord(id:String=""):Boolean
+ 
+// stop all playing records
+public function stopAll():Boolean
+ 
+// seek to point in time
+public function seek(id:String = "", time:int = 0):void
+ 
+// seek to percentage in time
+public function seekPercent(id:String = "", time:Number = 0):void
+4. You can also request audio sample data
+
+// request sample data
+public function getSpectrum(channels:int, average:Boolean=false, fft:Boolean=true):Vector.<Number>
+Equalizing and song info
+
+// change volume and panning of record
+public function equalize(id:String = "", volume:Number=0, pan:Number=0):void
+ 
+// change volume and panning of global SoundMixer
+public function equalizeGlobal(volume:Number=0, pan:Number=0):void
+ 
+// get time played in percentage
+public function getProgress(id:String=""):Number
+Notes:
+
+1. When loading an external song (or uploading), it is required that you wait for the ready signal before trying to play that track. It sends the ID of the song you loaded to the callback function.
+
+jukebox.ready.add(songLoaded);
+ 
+private function songLoaded(id:String):void
+2. The done event notifies you when a track is completed (after n° of repeats)
+
+jukebox.done.add(songFinished);
+ 
+private function songFinished(id:String):void
+3. If you want to play just one track you can preload a specific track. Next time you use play, stop or whatever you don’t need to pass an ID. This improves performance because you don’t need the look up.
+
+public function chooseRecord(id:String):Boolean
+4. You’ll need the Signals library from Robert Penner to use Jukebox. Get it here.
+5. It’s possible that the code is not 100% stable yet, comments and bug reports are welcome.
+6. You are free to use this code in any type of project, make modifications or share it with others. Just leave the credit in there pretty please.
